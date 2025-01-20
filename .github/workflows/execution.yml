@@ -21,4 +21,15 @@ jobs:
 
       - name: Set up Docker
         run: |
-          docker-compose up -d
+          docker-compose build
+          docker-compose up
+          docker-compose logs -f tests || exit 1
+      - name: Run Playwright
+        run: npx playwright test
+
+      - name: Debug Containers
+        run: |
+          docker-compose logs app
+          docker-compose logs tests
+          docker ps -a
+          docker inspect tests --format='{{.State.ExitCode}}'

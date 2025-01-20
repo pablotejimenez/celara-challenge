@@ -34,6 +34,8 @@ npm install
 npm init playwright@latest
 ```
 
+#### In the installation wizard, choose JavaScript
+
 ### Install branded Browsers
 
 ```bash

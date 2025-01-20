@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: Celara Automation Challenge Tests
 
 on:
   push:
@@ -29,14 +29,23 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Wait for the demo app to be ready
-        run: |
-          # Wait for the demo app to be fully available at port 3100
-          until curl --silent --fail http://localhost:3100; do
-            echo "Waiting for demo app to start..."
-            sleep 5
-          done
-          echo "Demo app is up!"
+    - name: Wait for the demo app to be ready
+      run: |
+        echo "Waiting for demo app to be available..."
+        max_attempts=30  # Max attempts before failing
+        attempt=0
+        until curl --silent --fail http://localhost:3100 || [ $attempt -ge $max_attempts ]; do
+          attempt=$((attempt + 1))
+          echo "Attempt $attempt of $max_attempts: Waiting for demo app to start..."
+          sleep 5
+        done
+        
+        if [ $attempt -ge $max_attempts ]; then
+          echo "Demo app failed to start after $max_attempts attempts!"
+          exit 1  # Fail the step if the app is not available
+        fi
+        
+        echo "Demo app is up!"
 
       - name: Run Playwright tests
         run: npx playwright test

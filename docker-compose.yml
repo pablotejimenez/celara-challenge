@@ -16,11 +16,6 @@ services:
       - app
     network_mode: 'host'
     command: ['/bin/sh', '-c', 'sleep 10 && npx playwright test'] # Add a delay to ensure the app is loaded before running the tests
-    # healthcheck:
-    #   test: ['CMD', 'curl', '-f', 'http://localhost:3100']
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 5
 
 networks:
   playwright-network:

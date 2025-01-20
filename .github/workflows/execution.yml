@@ -28,12 +28,12 @@ jobs:
           docker-compose build
           docker-compose up
           docker-compose logs -f tests || exit 1
-      - name: Run Playwright
-        run: npx playwright test
 
-      - name: Debug Containers
-        run: |
-          docker-compose logs app
-          docker-compose logs tests
-          docker ps -a
-          docker inspect tests --format='{{.State.ExitCode}}'
+     - name: Copy Playwright Report
+        run: docker cp $(docker-compose ps -q tests):/challenge_celara/playwright-report ./playwright-report
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: ./playwright-report

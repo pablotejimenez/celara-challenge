@@ -101,20 +101,28 @@ exports.CheckoutPage = class CheckoutPage {
     }
   }
 
-  async acceptSameAddressAlert(expectedType, expectedMessage) {
+  async acceptSameAddressAlert(
+    expectedType,
+    expectedMessage,
+    maxRetries,
+    timeout
+  ) {
+    const helpers = new Helpers(this.page);
     let alertIsGone = false;
-    const dialog = await this.page.waitForEvent('dialog');
+    const dialog = await helpers.waitForDialog(maxRetries, timeout);
+
     if (
       dialog.type() === expectedType &&
       dialog.message() === expectedMessage
     ) {
       await dialog.accept();
-      const helpers = new Helpers(this.page);
       await helpers.dismissDialog();
-      return (alertIsGone = true);
+      alertIsGone = true;
     } else {
       throw new Error('Unexpected dialog type or message.');
     }
+
+    return alertIsGone;
   }
 
   async getAllPricesFromCart() {

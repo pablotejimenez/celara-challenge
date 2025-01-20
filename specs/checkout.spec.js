@@ -40,7 +40,9 @@ test.describe('Checkout Flow Tests', () => {
     await checkoutPage.submitButton.click();
     const isAlertGone = await checkoutPage.acceptSameAddressAlert(
       configuration.dialogs.alertType,
-      configuration.dialogs.sameAddressMustBeSelectedMsg
+      configuration.dialogs.sameAddressMustBeSelectedMsg,
+      3,
+      30000
     );
     expect(isAlertGone).toBe(true);
   });

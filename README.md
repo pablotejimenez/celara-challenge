@@ -1,4 +1,5 @@
 # **Celara Automation Challenge**
+This project uses Playwright with JavaScript.
 
 ## Must have before start
 
@@ -34,7 +35,7 @@ npm install
 npm init playwright@latest
 ```
 
-#### In the installation wizard, choose JavaScript
+#### _In the installation wizard, choose JavaScript_
 
 ### Install branded Browsers
 
@@ -51,11 +52,24 @@ npx playwright install chrome msedge
    ```
 
 2. **Replace the placeholder values with the correct values for your environment**
-   _(Note: for simplicity, the .env file is commented out in `.gitignore` file)_
 
-## Run tests manually
+   _Note: for simplicity, the `.env` file is commented out on purpose in `.gitignore` file._
+   
+   _In a real life scenario, the sensitive values would be injected into the .env file from a secure source, such as AWS Secrets Manager._
 
-### Run all the tests locally
+## Run the tests manually
+
+### Set up and run the demo application:
+
+```bash
+docker pull automaticbytes/demo-app
+```
+
+```bash
+docker run -p 3100:3100 automaticbytes/demo-app
+```
+
+### Run all the tests locally (headless)
 
 ```bash
 npx playwright test
@@ -75,23 +89,15 @@ npx playwright test specs/login.spec.js
 npx playwright show-report
 ```
 
-## Run test with Docker image
+## Run the tests with Docker
 
-### Set up and run the application:
-
-```bash
-docker pull automaticbytes/demo-app
-```
-
-```bash
-docker run -p 3100:3100 automaticbytes/demo-app
-```
-
-### Set up the testing environment and run the tests:
+### Build the Docker image:
 
 ```bash
 docker-compose build tests
 ```
+
+### Initialize the demo app and run the tests:
 
 ```bash
 docker-compose up

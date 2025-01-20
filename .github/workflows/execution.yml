@@ -19,6 +19,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y docker-compose
 
+      - name: Set up QEMU for cross-platform builds
+        run: |
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
       - name: Set up Docker
         run: |
           docker-compose build

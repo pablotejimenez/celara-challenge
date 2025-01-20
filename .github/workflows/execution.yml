@@ -35,7 +35,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          docker-compose exec tests npx playwright test
+          docker-compose exec -T tests npx playwright test
 
       - name: Create a Copy of Playwright Report
         run: docker cp $(docker-compose ps -q tests):/challenge_celara/playwright-report ./playwright-report

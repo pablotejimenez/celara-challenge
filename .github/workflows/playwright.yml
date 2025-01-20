@@ -15,7 +15,6 @@ jobs:
         image: automaticbytes/demo-app
         options: >-
           --publish 3100:3100
-          --detach  # Run the container in detached mode
 
     steps:
       - uses: actions/checkout@v4

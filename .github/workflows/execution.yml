@@ -23,10 +23,11 @@ jobs:
         run: |
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
-      - name: Build and Start Docker Containers
-        run: |
-          docker-compose build
-          docker-compose up -d
+      - name: Build Docker Images
+        run: docker-compose build
+
+      - name: Start App Container
+        run: docker-compose up -d app
 
       - name: Wait for App to Be Ready
         run: |
@@ -34,8 +35,7 @@ jobs:
           ./wait-for-app.sh http://localhost:3100
 
       - name: Run Tests
-        run: |
-          docker-compose exec -T tests npx playwright test
+        run: docker-compose up --no-deps --abort-on-container-exit tests
 
       - name: Create a Copy of Playwright Report
         run: docker cp $(docker-compose ps -q tests):/challenge_celara/playwright-report ./playwright-report

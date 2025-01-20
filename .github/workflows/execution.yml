@@ -35,7 +35,7 @@ jobs:
           ./wait-for-app.sh http://localhost:3100
 
       - name: Run Tests
-        run: docker-compose up --no-deps --abort-on-container-exit tests
+        run: docker-compose up --no-deps --abort-on-container-exit
 
       - name: Create a Copy of Playwright Report
         run: docker cp $(docker-compose ps -q tests):/challenge_celara/playwright-report ./playwright-report

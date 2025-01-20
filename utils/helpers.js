@@ -30,7 +30,6 @@ exports.Helpers = class Helpers {
       try {
         return await this.page.waitForEvent('dialog', { timeout });
       } catch (error) {
-        console.log(`Retrying... Attempts left: ${--maxRetries}`);
         if (maxRetries === 0) throw error;
       }
     }

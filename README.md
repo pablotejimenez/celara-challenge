@@ -87,7 +87,7 @@ docker pull automaticbytes/demo-app
 docker run -p 3100:3100 automaticbytes/demo-app
 ```
 
-### Set up the testing environment:
+### Set up the testing environment and run the tests:
 
 ```bash
 docker-compose build tests
@@ -97,7 +97,7 @@ docker-compose build tests
 docker-compose up
 ```
 
-### Run tests manually inside Docker:
+#### (Optional) Run tests manually inside Docker:
 
 ```bash
 docker-compose exec tests bash

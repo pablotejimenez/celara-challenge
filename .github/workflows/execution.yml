@@ -26,8 +26,8 @@ jobs:
       - name: Set up Docker
         run: |
           docker-compose build
-          docker-compose up
-          docker-compose logs -f tests || exit 1
+          docker-compose up --abort-on-container-exit
+          timeout 30s docker-compose logs -f tests || exit 1
 
       - name: Copy Playwright Report
         run: docker cp $(docker-compose ps -q tests):/challenge_celara/playwright-report ./playwright-report
@@ -37,3 +37,6 @@ jobs:
         with:
           name: playwright-report
           path: ./playwright-report
+
+      - name: Clean Up Docker Containers
+        run: docker-compose down --remove-orphans

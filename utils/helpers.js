@@ -25,6 +25,17 @@ exports.Helpers = class Helpers {
     throw new Error(`Text "${text}" did not disappear within ${timeout}ms`);
   }
 
+  async waitForDialog(maxRetries, timeout) {
+    while (maxRetries > 0) {
+      try {
+        return await this.page.waitForEvent('dialog', { timeout });
+      } catch (error) {
+        console.log(`Retrying... Attempts left: ${--maxRetries}`);
+        if (maxRetries === 0) throw error;
+      }
+    }
+  }
+
   async dismissDialog() {
     this.page.on('dialog', dialog => dialog.dismiss());
   }

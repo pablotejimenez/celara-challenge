@@ -4,7 +4,7 @@ services:
     image: automaticbytes/demo-app
     ports:
       - '3100:3100'
-    platform: linux/amd64
+    platform: linux/arm64/v8
     networks:
       - playwright-network
 
@@ -15,7 +15,7 @@ services:
     depends_on:
       - app
     network_mode: 'host'
-    command: ['npx', 'playwright', 'test']
+    command: ['/bin/sh', '-c', 'sleep 10 && npx playwright test'] # Add a delay to ensure the app is loaded before running the tests
 
 networks:
   playwright-network:

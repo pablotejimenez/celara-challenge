@@ -12,7 +12,9 @@ test.describe('Search Functionality Tests', () => {
   let homePage;
   const username = configuration.testUser.userName;
   const password = configuration.testUser.password;
-  const searchingInProgress = configuration.searchPage.searching;
+  const searchTerm = configuration.products.superPepperoniTitle;
+  const resultFoundPrefix = configuration.searchPage.oneResultPrefix;
+  const provideSearchWordMsg = configuration.searchPage.provideSearchWordMsg;
 
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
@@ -21,31 +23,19 @@ test.describe('Search Functionality Tests', () => {
     helpers = new Helpers(page);
     await loginPage.goToUrl();
     await loginPage.login(username, password);
-    await homePage.welcomeMessage.waitFor();
     await searchPage.goToUrl();
   });
 
-  test('SRCH-01 | verify search engine returns one result', async () => {
-    const searchTerm = configuration.products.superPepperoniTitle;
-    const resultFoundPrefix = configuration.searchPage.oneResultPrefix;
+  test('SRCH-01 | Verify search engine returns one result', async () => {
     await searchPage.performSearch(searchTerm);
-    await helpers.waitForTextToDisappear(
-      searchPage.searchResult,
-      searchingInProgress
-    );
     expect(await searchPage.searchResult).toBeVisible();
     expect(await searchPage.searchResult.textContent()).toEqual(
       resultFoundPrefix + searchTerm
     );
   });
 
-  test('SRCH-02 | verify empty search displays an alert', async () => {
-    const provideSearchWordMsg = configuration.searchPage.provideSearchWordMsg;
+  test('SRCH-02 | Verify empty search displays an alert', async () => {
     await searchPage.performSearch();
-    await helpers.waitForTextToDisappear(
-      searchPage.searchResult,
-      searchingInProgress
-    );
     expect(await searchPage.searchResult).toBeVisible();
     expect(await searchPage.searchResult.textContent()).toEqual(
       provideSearchWordMsg

@@ -22,7 +22,7 @@ module.exports = defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.BASE_URL || 'http://localhost:3100',
+    baseURL: process.env.BASE_URL,
     headless: true,
     viewport: { width: 1280, height: 720 },
 
@@ -36,12 +36,10 @@ module.exports = defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'], isMobile: false }
     },
-
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'], isMobile: false }
     },
-
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'], isMobile: false }

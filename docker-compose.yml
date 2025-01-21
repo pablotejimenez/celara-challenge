@@ -15,7 +15,7 @@ services:
     depends_on:
       - app
     network_mode: 'host'
-    command: ['/bin/sh', '-c', 'sleep 10 && npx playwright test'] # Add a delay to ensure the app is loaded before running the tests
+    command: ['/bin/sh', '-c', 'npx playwright test']
 
 networks:
   playwright-network:

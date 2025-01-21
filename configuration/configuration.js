@@ -16,16 +16,25 @@ config.urls = {
 config.testUser = {
   userName: process.env.TEST_USER_USERNAME,
   password: process.env.TEST_USER_PASSWORD,
-  fullName: 'John Doe',
-  email: 'johndoe19@gmail.com',
-  address: '8609 Westwood Center',
-  city: 'Tysons Corner',
-  state: 'Virginia',
-  zip: '22182',
-  ccNumber: '4111111111111111',
-  expMonth: 'March',
-  expYear: '2030',
-  cvv: '123'
+  personalInfo: {
+    fullName: 'John Doe',
+    email: 'johndoe19@gmail.com',
+    address: '8609 Westwood Center',
+    city: 'Tysons Corner',
+    state: 'Virginia',
+    zip: '22182'
+  },
+  paymentData: {
+    ccNumber: '4111111111111111',
+    expMonth: 'March',
+    expYear: '2030',
+    cvv: '123'
+  }
+};
+
+config.invalidTestUser = {
+  userName: 'wrongUsername',
+  password: 'wrongPassword'
 };
 
 config.dialogs = {

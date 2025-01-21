@@ -23,22 +23,18 @@ test.describe('Checkout Flow Tests', () => {
     helpers = new Helpers(page);
     await loginPage.goToUrl();
     await loginPage.login(username, password);
-    await homePage.welcomeMessage.waitFor();
+    // await homePage.welcomeMessage.waitFor();
     await checkoutPage.goToUrl();
   });
 
-  test('CO-01 | verify user can successfully place an order', async () => {
-    await checkoutPage.completeCheckoutForm(configuration.testUser);
-    await checkoutPage.checkSameAddressCheckbox();
-    await checkoutPage.submitButton.click();
+  test('CO-01 | Verify user can successfully place an order', async () => {
+    await checkoutPage.completeCheckoutProcess(configuration.testUser, true);
     await expect(orderConfirmationPage.orderNumber).not.toBeEmpty();
   });
 
-  test('CO-02 | verify user cannot continue without selecting the same address checkbox and alert handling', async () => {
-    await checkoutPage.completeCheckoutForm(configuration.testUser);
-    await checkoutPage.uncheckSameAddressCheckbox();
-    await checkoutPage.submitButton.click();
-    const isAlertGone = await checkoutPage.acceptSameAddressAlert(
+  test('CO-02 | Verify user cannot continue without selecting the same address checkbox and alert handling', async () => {
+    await checkoutPage.completeCheckoutProcess(configuration.testUser, false);
+    const isAlertGone = await helpers.waitAndDismissDialog(
       configuration.dialogs.alertType,
       configuration.dialogs.sameAddressMustBeSelectedMsg,
       3,
@@ -47,7 +43,7 @@ test.describe('Checkout Flow Tests', () => {
     expect(isAlertGone).toBe(true);
   });
 
-  test('CO-03 | verify cart total price is correct', async () => {
+  test('CO-03 | Verify cart total price is correct', async () => {
     const sumOfProducts = await checkoutPage.sumPricesFromCartProducts();
     const totalPrice = await checkoutPage.getTotalPriceFromCart();
     expect(totalPrice).toEqual(sumOfProducts);

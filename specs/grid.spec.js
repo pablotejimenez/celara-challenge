@@ -20,11 +20,10 @@ test.describe('Product Grid Tests', () => {
     helpers = new Helpers(page);
     await loginPage.goToUrl();
     await loginPage.login(username, password);
-    await homePage.welcomeMessage.waitFor();
     await gridPage.goToUrl();
   });
 
-  test('GRID-01 | verify 7th product title and price', async () => {
+  test('GRID-01 | Verify 7th product title and price', async () => {
     const [title, price] = await gridPage.getProductInfoByPosition(6);
     const expectedTitle = configuration.products.superPepperoniTitle;
     const expectedPrice = configuration.products.superPepperoniPrice;
@@ -32,10 +31,8 @@ test.describe('Product Grid Tests', () => {
     expect(expectedPrice).toEqual(price);
   });
 
-  test('GRID-02 | verify all products have title, price, image and add button', async () => {
-    const itemsCount = await gridPage.itemsInGrid.count();
-
-    for (let i = 0; i < itemsCount; i++) {
+  test('GRID-02 | Verify all products have title, price, image and add button', async () => {
+    for (let i = 0; i < (await gridPage.itemsInGrid.count()); i++) {
       const item = await gridPage.itemsInGrid.nth(i);
       const [title, price, imageSrc] = await gridPage.getProductInfoByPosition(
         i

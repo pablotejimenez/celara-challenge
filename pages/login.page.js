@@ -1,4 +1,5 @@
 const configuration = require('../configuration/configuration');
+const { HomePage } = require('../pages/home.page');
 
 exports.LoginPage = class LoginPage {
   /**
@@ -31,9 +32,13 @@ exports.LoginPage = class LoginPage {
     return this.page.locator('#message');
   }
 
-  async login(username, password) {
+  async login(username, password, handleInvalidLogin) {
+    const homePage = new HomePage(this.page);
     await this.userInput.fill(username);
     await this.passInput.fill(password);
     await this.submitBtn.click();
+    if (!handleInvalidLogin) {
+      await homePage.welcomeMessage.waitFor();
+    }
   }
 };

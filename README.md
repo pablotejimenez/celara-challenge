@@ -6,6 +6,27 @@ This project uses Playwright with JavaScript, and has 3 ways to run the tests:
 2. Inside a Docker container
 3. With a CI/CD flow in Github Actions
 
+## Contents
+- [Must Have Before Start](#must-have-before-start)
+- [Clone the repo](#clone-this-celara-challenge-github-repo)
+- [Install Playwright](#install-playwright)
+- [Run the Tests Locally](#run-the-tests-locally)
+  - [Set Up and Run the Demo Application](#set-up-and-run-the-demo-application)
+  - [Run All the Tests Locally](#run-all-the-tests-locally-headless)
+  - [Run a Specific Test Suite](#run-a-specific-test-suite)
+  - [See Report After a Test Run](#see-report-after-a-test-run)
+- [Run the Tests with Docker](#run-the-tests-with-docker)
+  - [Build the Docker Image](#build-the-docker-image)
+  - [Initialize the Demo App and Run the Tests](#initialize-the-demo-app-and-run-the-tests)
+  - [(Optional) Run Tests Manually Inside Docker](#optional-run-tests-manually-inside-docker)
+  - [Teardown Docker Container](#teardown-docker-container)
+- [Continuous Integration Workflow](#continuous-integration-workflow)
+  - [Builds the App and Test Suite](#builds-the-app-and-test-suite)
+  - [Runs the Tests](#runs-the-tests)
+  - [Tears Down Containers](#tears-down-containers)
+  - [Uploads Test Report](#uploads-test-report)
+- [About the Project](#about-the-project)
+
 ## Must have before start
 
 - Git

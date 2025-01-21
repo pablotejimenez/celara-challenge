@@ -4,15 +4,17 @@ This project uses Playwright with JavaScript, and has 3 ways to run the tests:
 
 1. Locally
 2. Inside a Docker container
-3. With a CI/CD flow in Github Actions
+3. With a dockerized CI/CD flow in Github Actions
 
 ## Contents
+
+- [About the Project](#about-the-project)
 - [Must Have Before Start](#must-have-before-start)
 - [Clone the repo](#clone-this-celara-challenge-github-repo)
 - [Install Playwright](#install-playwright)
 - [Run the Tests Locally](#run-the-tests-locally)
   - [Set Up and Run the Demo Application](#set-up-and-run-the-demo-application)
-  - [Run All the Tests Locally](#run-all-the-tests-locally-headless)
+  - [Run All the Tests](#run-all-the-tests-headless)
   - [Run a Specific Test Suite](#run-a-specific-test-suite)
   - [See Report After a Test Run](#see-report-after-a-test-run)
 - [Run the Tests with Docker](#run-the-tests-with-docker)
@@ -24,8 +26,67 @@ This project uses Playwright with JavaScript, and has 3 ways to run the tests:
   - [Builds the App and Test Suite](#builds-the-app-and-test-suite)
   - [Runs the Tests](#runs-the-tests)
   - [Tears Down Containers](#tears-down-containers)
-  - [Uploads Test Report](#uploads-test-report)
-- [About the Project](#about-the-project)
+  - [Uploads the Test Report](#uploads-test-report)
+
+## About the project
+
+My goal was to make it clean, concise, scalable, efficient and automated.
+
+The project is fully dockerized, and it supports being run locally but it's also used for the Github Actions runner. The docker-compose and Dockerfile are configured to be executed with a single command that triggers a new build, that will run the Demo app, wait for it to be ready, install all needed packages and run the test suites.
+
+I've also implemented a CI/CD workflow on Github Actions, so it's easy to run the test suites everytime a pull request to the main branch is created, and everytime a merge to the same branch is executed. This aims to prevent the introduction of bugs in the system, so it can help ease the manual testing effort and so the dev team can merge to main with confidence. The test suites run is also triggerable directy from Github Actions to assure fast response when needed.
+
+After the tests are done running, the report is copied and saved, and made available to be downloaded from the run detail. If I were to make an improvement of this flow, it would be to get the report published in a secure server with easy access for the stakeholders, the dev team and other non-tech employees.
+
+In order to handle the friction between the time it takes for the Demo app build to be available at localhost and the time it takes the tests to start running, a script was implemented to check that the expected url returns 200 before running the tests. This was handled with a little bash script.
+
+Then, I've set up an .env file to keep secrets separate. For this example, the .env file was actually provided in the repo, but in a real project I would inject the secrets from AWS Secrets Manager into the Docker container env before running the tests.
+
+As to the test design, the test suites are implemented using a page object model design pattern, where every page is represented with a singular file. The specs are created with the same logic and a configuration file allows us to easy handle test data in the case we need to change it. Also a helpers page contains the methods that are useful and shared across the pages.
+
+Finally, the test scripting was intended to be assertive, testing specifically what the test cases described, and using pages methods to improve readability by using descriptive naming with clean code best practices.
+
+Well, to summarize:
+
+### Implemented a Page Object Model
+
+I kept things organized by separating page specific actions and elements into their own classes.
+
+### It's Dockerized
+
+Provided instructions to build (and run the tests inside) a Docker image, containing the Demo app and the test code.
+
+### It has its own CI/CD Workflow in GitHub Actions
+
+It has a fully automated workflow that:
+
+- Builds the app and test suite using Docker.
+- Runs the tests and generates a Playwright report.
+- Uploads the report to GitHub Actions artifacts.
+- Cleans up containers when it’s done.
+
+### Added a wait-for-app Script
+
+For the CI/CD flow, I added a little bash script that makes sure the Demo app is ready to go before tests start running, to prevent connection refused errors.
+
+### It has a Configuration File
+
+Keeps credentials and other important strings in one place, making it easy to update and manage.
+
+### Handle the sensitive data
+
+Implemented an .env file to handle sensitive data in the Playwright configuration file, and the test data configuration file.
+
+_Note: while the `.env` file is actually included in the project, it is a proof of concept in order to show how I would handle the secrets._
+
+### It has some helpers
+
+The repetitive tasks are handled in a helper file that has commonly used methods.
+
+### And it supports many Browsers
+
+It works with all the popular and branded browsers: Chrome (and Chromium), Firefox, Safari (WebKit) and Edge.
+It also supports mobile viewports, so the coverage extends to iOS and Android devices.
 
 ## Must have before start
 
@@ -33,7 +94,7 @@ This project uses Playwright with JavaScript, and has 3 ways to run the tests:
 - Docker
 - Node.js
 
-## Clone this Celara Challenge GitHub Repo
+## Clone this GitHub Repo
 
 1. **Navigate to the directory where you want to clone the repository**:
 
@@ -95,7 +156,7 @@ docker pull automaticbytes/demo-app
 docker run -p 3100:3100 automaticbytes/demo-app
 ```
 
-### Run all the tests locally (headless)
+### Run all the tests (headless)
 
 ```bash
 npx playwright test
@@ -169,48 +230,5 @@ This project includes a GitHub Actions workflow that builds a Docker image, pull
 
 - The generated Playwright report is uploaded to GitHub Actions as an artifact.
 - You can download the report from the GitHub Actions run page under the Artifacts section.
-- The action run can be re-run manually if needed.
 
-## About the project
-
-My goal was to make it clean, concise, scalable, efficient and automated. Here are the main keys:
-
-### Implemented a Page Object Model
-
-I kept things organized by separating page specific actions and elements into their own classes.
-
-### It's Dockerized :)
-
-Provided some handy instructions to build (and run the tests inside) a Docker image, containing the Demo app and the test code.
-
-### It has its own CI/CD Workflow in GitHub Actions
-
-It has a fully automated workflow that:
-
-- Builds the app and test suite using Docker.
-- Runs the tests and generates a Playwright report.
-- Uploads the report to GitHub Actions artifacts.
-- Cleans up containers when it’s done.
-
-### Added a wait-for-app Script:
-
-For the CI/CD flow, I added a little script that makes sure the Demo app is ready to go before tests start running, to prevent connection refused errors.
-
-### It has a Configuration File:
-
-Keeps credentials and other important strings in one place, making it easy to update and manage.
-
-### Handle the sensitive data:
-
-Implemented an .env file to handle sensitive data in the Playwright configuration file, and the test data configuration file.
-
-_Note: while the `.env` file is actually included in the project, it is a proof of concept in order to show how I would handle the secrets. A nice approach would be to inject the secrets from Github Actions secrets, or even better AWS Secrets Manager, into the Docker container env before running the tests._
-
-### It has some helpers:
-
-The repetitive tasks are handled in a helper file that has commonly used methods.
-
-### And it supports many, many Browsers:
-
-It works with all the popular and branded browsers: Chrome (and Chromium), Firefox, Firefox, Safari (WebKit) and Edge.
-It also supports mobile viewports, so the coverage extends to iPhones and androids.
+#### The tests can be re-run manually from the run detail if needed.

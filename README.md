@@ -101,7 +101,7 @@ docker run -p 3100:3100 automaticbytes/demo-app
 npx playwright test
 ```
 
-### Run a specific tests suite
+### Run a specific test suite
 
 Example:
 

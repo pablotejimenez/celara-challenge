@@ -72,63 +72,43 @@ exports.CheckoutPage = class CheckoutPage {
     return this.page.locator('.price', { hasText: '$' });
   }
 
+  async completeCheckoutProcess(user, bool) {
+    await this.completeCheckoutForm(user);
+    // await this.checkSameAddressCheckbox();
+    await this.toggleSameAddressCheckbox(bool);
+    await this.submitButton.click();
+  }
+
   async completeCheckoutForm(user) {
     const helpers = new Helpers(this.page);
-    await this.fullNameInput.fill(user.fullName);
-    await this.emailInput.fill(user.email);
-    await this.addressInput.fill(user.address);
-    await this.cityInput.fill(user.city);
-    await this.stateInput.fill(user.state);
-    await this.zipInput.fill(user.zip);
-    await this.cardNameInput.fill(user.fullName);
-    await this.cardNumberInput.fill(user.ccNumber);
-    await this.expYearInput.fill(user.expYear);
-    helpers.selectOptionFromDropdown(this.expMonthDropdown, user.expMonth);
-    await this.cvvInput.fill(user.cvv);
+    await this.fullNameInput.fill(user.personalInfo.fullName);
+    await this.emailInput.fill(user.personalInfo.email);
+    await this.addressInput.fill(user.personalInfo.address);
+    await this.cityInput.fill(user.personalInfo.city);
+    await this.stateInput.fill(user.personalInfo.state);
+    await this.zipInput.fill(user.personalInfo.zip);
+    await this.cardNameInput.fill(user.personalInfo.fullName);
+    await this.cardNumberInput.fill(user.paymentData.ccNumber);
+    await this.expYearInput.fill(user.paymentData.expYear);
+    helpers.selectOptionFromDropdown(
+      this.expMonthDropdown,
+      user.paymentData.expMonth
+    );
+    await this.cvvInput.fill(user.paymentData.cvv);
   }
 
-  async checkSameAddressCheckbox() {
+  async toggleSameAddressCheckbox(shouldCheck) {
     const isChecked = await this.shippingSameBillingCheckbox.isChecked();
-    if (!isChecked) {
+    if (shouldCheck && !isChecked) {
       await this.shippingSameBillingCheckbox.check();
-    }
-  }
-
-  async uncheckSameAddressCheckbox() {
-    const isChecked = await this.shippingSameBillingCheckbox.isChecked();
-    if (isChecked) {
+    } else if (!shouldCheck && isChecked) {
       await this.shippingSameBillingCheckbox.uncheck();
     }
   }
 
-  async acceptSameAddressAlert(
-    expectedType,
-    expectedMessage,
-    maxRetries,
-    timeout
-  ) {
-    const helpers = new Helpers(this.page);
-    let alertIsGone = false;
-    const dialog = await helpers.waitForDialog(maxRetries, timeout);
-
-    if (
-      dialog.type() === expectedType &&
-      dialog.message() === expectedMessage
-    ) {
-      await dialog.accept();
-      await helpers.dismissDialog();
-      alertIsGone = true;
-    } else {
-      throw new Error('Unexpected dialog type or message.');
-    }
-
-    return alertIsGone;
-  }
-
   async getAllPricesFromCart() {
-    const count = await this.cartPrices.count();
     const prices = [];
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < (await this.cartPrices.count()); i++) {
       const priceText = await this.cartPrices.nth(i).textContent();
       prices.push(parseFloat(priceText.replace('$', '').trim()));
     }

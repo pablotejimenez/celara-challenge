@@ -8,8 +8,8 @@ test.describe('Login Functionality Tests', () => {
   let homePage;
   const username = configuration.testUser.userName;
   const password = configuration.testUser.password;
-  const invalidUsername = 'wrongUsername';
-  const invalidPassword = 'wrongPassword';
+  const invalidUsername = configuration.invalidTestUser.userName;
+  const invalidPassword = configuration.invalidTestUser.password;
   const emptyString = '';
 
   test.beforeEach(async ({ page }) => {
@@ -18,38 +18,40 @@ test.describe('Login Functionality Tests', () => {
     await loginPage.goToUrl();
   });
 
-  test('LOG-01 | verify user logs in sucessfully and lands on the homepage', async () => {
+  test('LOG-01 | Verify user logs in sucessfully and lands on the homepage', async () => {
     await loginPage.login(username, password);
     await expect(homePage.welcomeMessage).toBeVisible();
     await expect(homePage.welcomeMessageUsername).toHaveText(username);
   });
 
-  test('LOG-02a | verify user fails to login with invalid username and proper alert displays', async () => {
-    await loginPage.login(invalidUsername, password);
+  test('LOG-02a | Verify user fails to login with invalid username and proper alert displays', async () => {
+    await loginPage.login(invalidUsername, password, true);
     await expect(loginPage.message, 'alert is not visible').toBeVisible();
-    const displayedText = await loginPage.message.textContent();
+    const messageText = await loginPage.message.textContent();
     await expect(
       loginPage.message,
-      `alert text is: "${displayedText}" and was expecting: "${configuration.loginPage.wrongCredentials}"`
+      `alert text is: "${messageText}" and was expecting: "${configuration.loginPage.wrongCredentials}"`
     ).toHaveText(configuration.loginPage.wrongCredentials);
   });
 
-  test('LOG-02b | verify user fails to login with invalid password and proper alert displays', async () => {
-    await loginPage.login(username, invalidPassword);
+  test('LOG-02b | Verify user fails to login with invalid password and proper alert displays', async () => {
+    await loginPage.login(username, invalidPassword, true);
     await expect(loginPage.message).toBeVisible();
-    const displayedText = await loginPage.message.textContent();
+    const messageText = await loginPage.message.textContent();
     await expect(
       loginPage.message,
-      `alert text is: "${displayedText}" and was expecting: "${configuration.loginPage.wrongCredentials}"`
+      `alert text is: "${messageText}" and was expecting: "${configuration.loginPage.wrongCredentials}"`
     ).toHaveText(configuration.loginPage.wrongCredentials);
   });
 
-  test('LOG-03 | verify user fails to login with empty fields and proper alert displays', async () => {
-    await loginPage.login(emptyString, emptyString);
+  test('LOG-03 | Verify user fails to login with empty fields and proper alert displays', async () => {
+    await loginPage.login(emptyString, emptyString, true);
     await expect(loginPage.message).toBeVisible();
-    await expect(loginPage.message).toHaveText(
-      configuration.loginPage.emptyFields
-    );
+    const messageText = await loginPage.message.textContent();
+    await expect(
+      loginPage.message,
+      `alert text is: "${messageText}" and was expecting: "${configuration.loginPage.wrongCredentials}"`
+    ).toHaveText(configuration.loginPage.emptyFields);
   });
 
   test.afterEach(async ({ page }) => {

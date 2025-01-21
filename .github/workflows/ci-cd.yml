@@ -1,0 +1,52 @@
+name: Dockerized CI/CD Workflow for Celara Automation Challenge Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: Set up QEMU for cross-platform builds
+        run: |
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
+      - name: Build Docker Images
+        run: docker-compose build
+
+      - name: Start App Container
+        run: docker-compose up -d app
+
+      - name: Wait for App to Be Ready
+        run: |
+          chmod +x ./wait-for-app.sh
+          ./wait-for-app.sh http://localhost:3100
+
+      - name: Run Tests
+        run: docker-compose up --no-deps --abort-on-container-exit
+
+      - name: Create a Copy of Playwright Report
+        run: docker cp $(docker-compose ps -q tests):/challenge_celara/playwright-report ./playwright-report
+
+      - name: Upload Playwright Report to Github Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: ./playwright-report
+
+      - name: Clean Up Docker Containers
+        run: docker-compose down --remove-orphans

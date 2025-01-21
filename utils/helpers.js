@@ -25,7 +25,29 @@ exports.Helpers = class Helpers {
     throw new Error(`Text "${text}" did not disappear within ${timeout}ms`);
   }
 
-  async waitForDialog(maxRetries, timeout) {
+  async waitAndDismissDialog(
+    expectedType,
+    expectedMessage,
+    maxRetries,
+    timeout
+  ) {
+    let alertIsGone = false;
+    const dialog = await this.waitForDialogEvent(maxRetries, timeout);
+
+    if (
+      dialog.type() === expectedType &&
+      dialog.message() === expectedMessage
+    ) {
+      await this.dismissDialog();
+      alertIsGone = true;
+    } else {
+      throw new Error('Unexpected dialog type or message.');
+    }
+
+    return alertIsGone;
+  }
+
+  async waitForDialogEvent(maxRetries, timeout) {
     while (maxRetries > 0) {
       try {
         return await this.page.waitForEvent('dialog', { timeout });

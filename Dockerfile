@@ -19,5 +19,8 @@ COPY . .
 # Install Playwright dependencies
 RUN npx playwright install --with-deps
 
+# Ensure proper permissions for all files
+RUN chmod -R 755 /challenge_celara
+
 # Command to run the tests
 CMD ["npx", "playwright", "test"]

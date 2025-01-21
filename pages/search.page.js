@@ -1,4 +1,5 @@
 const configuration = require('../configuration/configuration');
+const { Helpers } = require('../utils/helpers');
 
 exports.SearchPage = class SearchPage {
   /**
@@ -32,5 +33,14 @@ exports.SearchPage = class SearchPage {
       await this.searchInput.fill(term);
     }
     await this.searchSubmitBtn.click();
+    await this.waitForSearchToFinish();
+  }
+
+  async waitForSearchToFinish() {
+    const helpers = new Helpers(this.page);
+    await helpers.waitForTextToDisappear(
+      this.searchResult,
+      configuration.searchPage.searching
+    );
   }
 };

@@ -77,8 +77,6 @@ Keeps credentials and other important strings in one place, making it easy to up
 
 Implemented an .env file to handle sensitive data in the Playwright configuration file, and the test data configuration file.
 
-_Note: while the `.env` file is actually included in the project, it is a proof of concept in order to show how I would handle the secrets._
-
 ### It has some helpers
 
 The repetitive tasks are handled in a helper file that has commonly used methods.

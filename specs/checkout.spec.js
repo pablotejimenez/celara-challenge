@@ -23,7 +23,6 @@ test.describe('Checkout Flow Tests', () => {
     helpers = new Helpers(page);
     await loginPage.goToUrl();
     await loginPage.login(username, password);
-    // await homePage.welcomeMessage.waitFor();
     await checkoutPage.goToUrl();
   });
 

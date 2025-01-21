@@ -74,7 +74,6 @@ exports.CheckoutPage = class CheckoutPage {
 
   async completeCheckoutProcess(user, bool) {
     await this.completeCheckoutForm(user);
-    // await this.checkSameAddressCheckbox();
     await this.toggleSameAddressCheckbox(bool);
     await this.submitButton.click();
   }
